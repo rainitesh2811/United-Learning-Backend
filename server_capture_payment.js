@@ -6,9 +6,8 @@ const path = require('path');
 
 const app = express();
 
-// Allow only your Vercel frontend to access the backend
 app.use(cors({
-  origin: 'https://your-vercel-frontend-url.vercel.app'
+  origin: 'https://united-learning-frontend.vercel.app/'
 }));
 
 app.use(express.json());
