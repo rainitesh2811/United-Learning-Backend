@@ -5,7 +5,12 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
-app.use(cors());
+
+// Allow only your Vercel frontend to access the backend
+app.use(cors({
+  origin: 'https://your-vercel-frontend-url.vercel.app'
+}));
+
 app.use(express.json());
 
 // 🔐 Replace with environment variables in production
@@ -14,12 +19,9 @@ const razorpayInstance = new Razorpay({
   key_secret: 'yhJHiQYnANwqWyRCqevkpBaI'
 });
 
-// 📁 Serve static files from the frontend folder
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// ✅ Root route serves the homepage (index.html) from frontend
+// ✅ Root route returns a simple message
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+  res.send('Backend is running.');
 });
 
 // 🔁 Razorpay capture route
