@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 
 app.use(cors({
-  origin: 'https://unitedlearning.in'
+  origin: 'https://unitedlearning.in/'
 }));
 
 app.use(express.json());
