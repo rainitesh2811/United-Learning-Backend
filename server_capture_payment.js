@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 
 app.use(cors({
-  origin: 'https://united-learning-frontend.vercel.app'
+  origin: 'https://unitedlearning.in'
 }));
 
 app.use(express.json());
