@@ -1,48 +1,36 @@
-require('dotenv').config();
+require('dotenv').config(); // Add this at the top
 
 const express = require('express');
 const Razorpay = require('razorpay');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
 
 app.use(cors({
-  origin: 'https://united-learning-frontend.vercel.app/'
+  origin: ['https://unitedlearning.in', 'https://www.unitedlearning.in']
 }));
 
 app.use(express.json());
 
+// 🔐 Use environment variables for Razorpay keys
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-// Health check route
+// ✅ Root route returns a simple message
 app.get('/', (req, res) => {
   res.send('Backend is running.');
 });
 
-// Create Razorpay order (required for frontend checkout)
-app.post('/create_order', async (req, res) => {
-  const { amount } = req.body;
-  try {
-    const order = await razorpayInstance.orders.create({
-      amount: Math.round(amount), // Amount in paise
-      currency: 'INR',
-      receipt: 'receipt_' + Date.now()
-    });
-    res.json({ order_id: order.id });
-  } catch (err) {
-    console.error('Order creation failed:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Capture payment after successful checkout
+// 🔁 Razorpay capture route
 app.post('/server_capture_payment', async (req, res) => {
   const { paymentId, amount } = req.body;
+
   try {
-    const response = await razorpayInstance.payments.capture(paymentId, Math.round(amount));
+    const response = await razorpayInstance.payments.capture(paymentId, amount);
     console.log('Payment captured:', response);
     res.status(200).json({ success: true, data: response });
   } catch (error) {
@@ -51,6 +39,7 @@ app.post('/server_capture_payment', async (req, res) => {
   }
 });
 
+// 🚀 Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
