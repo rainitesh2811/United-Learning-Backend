@@ -7,7 +7,7 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors({
-  origin: ['https://unitedlearning.in', 'https://www.unitedlearning.in']
+  origin: 'https://united-learning-frontend.vercel.app/'
 }));
 
 app.use(express.json());
